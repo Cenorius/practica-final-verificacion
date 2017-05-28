@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pymongo import errors
+from datetime import datetime
 
 QUERY_GET_WORDS_FROM_DATE=[{"$match":{"date":"?"}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.apariciones"}}},{"$sort":{"count":-1}}]
 QUERY_GET_WORDS_MOST_USED_FROM_DATE=[{'$match':{"date":"?"}},{'$project':{"words":1}},{'$unwind':"$words"},{'$group':{"_id":"$words.word","count":{"$sum":"$words.apariciones"}}},{"$sort":{"count":-1}},{'$limit':5}]
@@ -28,15 +29,41 @@ class DBUtils(object):
 
     def insert_words(self,date,title,words):
         result=None
+
+        if not isinstance(date,(str,unicode)) or not isinstance(title,(str,unicode)) or not isinstance(words,list):
+            raise TypeError
+
+        if not self._is_date(date):
+            raise Exception("Date format is not valid")
+        
         if self.exists_article_in_db(title,date) is False:
-            result= self.collection.save({"date":date,"articles":[{"title":title,"words":{words}}]})
+            words=self._format_words(words)
+            result= self.collection.save({"date":date,"title":title,"words":words})
 
         return result is not None
     
-    def get_words_from_date(self,date):
+    def _format_words(self,words):
         result=[]
 
-        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.apariciones"}}},{"$sort":{"count":-1}}])
+        if isinstance(words,list):
+            for word in words:
+                result.append({"word":word[0],"count":word[1]})
+        else:
+            raise TypeError
+
+        return result
+
+    def _is_date(self,date):
+        try: 
+            datetime.strptime(date,"%d/%m/%Y")
+            return True
+        except ValueError:
+            return False
+
+    def get_words_from_date(self,date): 
+        result=[]
+
+        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}}])
 
         for e in iterator:
             result.append(e)

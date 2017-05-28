@@ -11,7 +11,7 @@ class CheckGetWordsInDatabaseTestSuite(unittest.TestCase):
 
     def test_not_exists_data_in_database(self):
 
-        words = [["hola",2],["ey",1],["toma",1]]
+        words = [{"word":"mal","count":7},{"word":"bien","count":6}]
         date="1/2/3"
         title="title"
 

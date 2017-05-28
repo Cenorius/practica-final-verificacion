@@ -22,7 +22,7 @@ def remove_stop_words(words):
     for i in words:
         if not isinstance(i, unicode):
             i = unicode(i, "utf-8", "ignore")
-        word = unidecode(i).lower()
+        word = convert_caps(unidecode(i))
         if word not in stopwords:
             useful_words.append(word)
 

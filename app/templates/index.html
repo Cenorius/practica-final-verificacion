@@ -32,13 +32,13 @@
         <div id="results-container">
             <div id="messages-container">
                 <ul>
-                {% if response %}
+                {% if articles %}
                     {% for key, value in response.iteritems() %}
                     <li>{{ key }}: {{ value }}</li>
                     {% endfor %}
                 {% endif %}
                 </ul>
-                {% if message %}
+                {% if words %}
                 <p id="message">{{ message }}</p>
                 {% endif %}
             </div>

@@ -6,16 +6,19 @@ from textprocessor import core
 @app.route("/index")
 @app.route("/", methods=['GET', 'POST'])
 def parse_text():
+    temp=[]
     resp = dict()
     form = TextProcessorForm(request.form)
+
     if request.method == 'POST':
-        text = request.form['name']
-        if (len(text) > 100):
-            #flash("Max length is 100")
-            return render_template('index.html', form=form, response=None, message="Max length is 100")
-        else:
-            if form.validate():
-                parsed_text = reversed(core.process(text))
-                for i in parsed_text:
-                    resp[i[0]] = i[1]
+        date = form.date.raw_data[0]
+        temp=date.split('/')
+        date=temp[1]+"/"+temp[0]+"/"+temp[2]
+
+        if form.validate():
+            print request.form['source']
+            if request.form['source']=='MostUsed':
+                print "palabras mas usadas"
+            elif request.form['source']=='Articles':
+                print "palabras por articulo"
     return render_template('index.html', form=form, response=resp, message=None)

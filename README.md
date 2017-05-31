@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/DarkAnHell/practica-final-verificacion.svg?branch=master)](https://travis-ci.org/DarkAnHell/practica-final-verificacion)
+Master Status: [![Build Status Master](https://travis-ci.org/DarkAnHell/practica-final-verificacion.svg?branch=master)](https://travis-ci.org/DarkAnHell/practica-final-verificacion)
+
+Dev Status: [![Build Status Dev](https://travis-ci.org/DarkAnHell/practica-final-verificacion.svg?branch=dev)](https://travis-ci.org/DarkAnHell/practica-final-verificacion)
 
 To be able to execute this project you need to install some packages. Follow this instructions:
 

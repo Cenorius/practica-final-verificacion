@@ -9,7 +9,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
   - nohup python main.py &
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost
+  #- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost
 
 install: 
   - "pip install -r requirements.txt"

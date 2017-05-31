@@ -47,7 +47,7 @@ class InsertWordsTestSuite(unittest.TestCase):
 
         self.assertFalse(result)
 
-      def test_date_not_str_in_database(self):
+      def test_date_not_str(self):
 
         words = [["mal",7],["bien",6]]
         date=1
@@ -58,10 +58,12 @@ class InsertWordsTestSuite(unittest.TestCase):
         # Get DBUtils
         db = DBUtils.DBUtils(collection)
 
-        with self.assertRaises(TypeError):
-          db.insert_words(date,title,words)
+        with self.assertRaises(Exception) as cm:
+            db.insert_words(date,title,words)
+        self.assertEqual("Date format is not valid", str(cm.exception), "No exception 'Date format is not valid' raised")
 
-      def test_title_not_str_in_database(self):
+
+      def test_title_not_str(self):
 
         words = [["mal",7],["bien",6]]
         date="1/2/3"
@@ -75,7 +77,8 @@ class InsertWordsTestSuite(unittest.TestCase):
         with self.assertRaises(TypeError):
           db.insert_words(date,title,words)
 
-      def test_words_not_list_in_database(self):
+
+      def test_words_not_list(self):
 
         words = "list"
         date="1/2/3"

@@ -17,12 +17,12 @@ class DBUtils(object):
     def __init__(self, collection):
         self.collection = collection
 
-    def check_args_type(self, args):
+    def check_args_type(self, args):#no se usa
         if isinstance(args, (list, dict)):
             return True
         return False
 
-    def query_db(self):
+    def query_db(self):#no se usa
         query_results = []
         [query_results.append(i) for i in self.collection.find({}, {'_id': False})]
         return query_results
@@ -30,7 +30,7 @@ class DBUtils(object):
     def insert_words(self,date,title,words):
         result=None
 
-        if not isinstance(date,(str,unicode)) or not isinstance(title,(str,unicode)) or not isinstance(words,list):
+        if not isinstance(title,(str,unicode)) or not isinstance(words,list):
             raise TypeError
 
         if not self._is_date(date):
@@ -57,13 +57,31 @@ class DBUtils(object):
         try: 
             datetime.strptime(date,"%d/%m/%Y")
             return True
-        except ValueError:
+        except:
             return False
 
     def get_words_from_date(self,date): 
         result=[]
 
-        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}}])
+        if not self._is_date(date):
+            raise Exception("Date format is not valid")
+
+        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}},{"$limit":10}])
+
+        for e in iterator:
+            result.append(e)
+        return result
+
+    def get_words_from_article(self,date, title):
+        result=[]
+
+        if not isinstance(title,(str,unicode)):
+            raise TypeError
+
+        if not self._is_date(date):
+            raise Exception("Date format is not valid")
+        
+        iterator=self.collection.aggregate([{"$match":{"date":date, "title":title}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$first":"$words.count"} }},{"$sort":{"count":-1}}])
 
         for e in iterator:
             result.append(e)
@@ -73,13 +91,13 @@ class DBUtils(object):
         result=self.collection.find_one({'date':date,'title':title})
         return result is not None
     
-    def exists_in_db(self, args):
+    def exists_in_db(self, args):#no se usa
         if self.check_args_type(args):
             return self.collection.find_one({'text': args})
         else:
             raise Exception("Invalid argument")
 
-    def store_in_db(self, args):
+    def store_in_db(self, args):#no se usa
         _id = ""
         if self.check_args_type(args):
             try:

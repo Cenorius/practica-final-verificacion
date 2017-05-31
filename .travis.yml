@@ -7,6 +7,6 @@ install: "pip install -r requirements.txt"
 script:
   - make clean
   - make test
-  - nohup python main.py
+  - nohup python main.py &
   - cd tests && lettuce
   - pkill -9 python

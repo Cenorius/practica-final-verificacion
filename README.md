@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DarkAnHell/practica-final-verificacion.svg?branch=master)](https://travis-ci.org/DarkAnHell/practica-final-verificacion)
+
 To be able to execute this project you need to install some packages. Follow this instructions:
 
 - Create a new virtual environment `virtualenv ENV`

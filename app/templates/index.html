@@ -27,19 +27,31 @@
             </div>
         </form>
         <br>
-        <br>
-        <br>
         <div id="results-container">
             <div id="messages-container">
-                <ul>
+                
                 {% if articles %}
-                    {% for key, value in response.iteritems() %}
-                    <li>{{ key }}: {{ value }}</li>
+                    {% for article in articles%}
+                        <h3>{{article.title}}</h3>
+                        <ul>
+                        {% for word in article.words %}
+                            <li>
+                                {{word._id}} {{word.count}}
+                            </li>
+                        {% endfor %}
+                         </ul>
                     {% endfor %}
                 {% endif %}
-                </ul>
+               
                 {% if words %}
-                <p id="message">{{ message }}</p>
+                    <h3>Words most used</h3>
+                    <ul>
+                    {% for word in words %}
+                    <li>
+                        {{word._id}} {{word.count}}
+                    </li>
+                    {% endfor %}
+                    </ul>
                 {% endif %}
             </div>
         </div>

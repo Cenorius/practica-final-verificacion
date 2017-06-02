@@ -7,10 +7,15 @@ from textprocessor import core
 @app.route("/", methods=['GET', 'POST'])
 def parse_text():
     temp=[]
+    words=None
+    articles=None
     resp = dict()
     form = TextProcessorForm(request.form)
 
     if request.method == 'POST':
+        articles=[{"title":"Titulo", "words":[{u'count': 7.0, u'_id': u'mal'},{u'count': 6.0, u'_id': u'bien'}]},{"title":"Titulo", "words":[{u'count': 7.0, u'_id': u'mal'},{u'count': 6.0, u'_id': u'bien'}]}]
+        words=[{u'count': 7.0, u'_id': u'mal'},{u'count': 6.0, u'_id': u'bien'}]
+
         date = form.date.raw_data[0]
         temp=date.split('/')
         date=temp[1]+"/"+temp[0]+"/"+temp[2]
@@ -21,4 +26,5 @@ def parse_text():
                 print "palabras mas usadas"
             elif request.form['source']=='Articles':
                 print "palabras por articulo"
-    return render_template('index.html', form=form, response=resp, message=None)
+    
+    return render_template('index.html', form=form, articles=articles, words=words)

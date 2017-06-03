@@ -31,8 +31,6 @@ def get_articles_by_date(date):
         titles = map(unicode, tree.xpath('//h2[@class="articulo-titulo"]/a/text()'))
         articles_urls = tree.xpath('//h2[@class="articulo-titulo"]/a/@href')
 
-#        if len(titles) != len(articles_urls):
-#            raise Exception("something went wrong. Found: %d article titles and %d article URLs" % (len(titles), len(articles_urls)))
     except Exception, e:
         raise Exception("body doesn't contain valid HTML")
 
@@ -54,7 +52,7 @@ def get_article_body(url):
 
     for element in body:
         content+= recursive_get_text(element)
-    
+
     try:
         introduction = tree.xpath('//*[@id="articulo-introduccion"]/p')
         for element in introduction:
@@ -65,15 +63,13 @@ def get_article_body(url):
     return content
 
 def recursive_get_text(element):
-    result=""
+    result = ""
     for i in element.getchildren():
         result+=recursive_get_text(i)
-    
+
     if(element.text):
-        result+=element.text
+        result += element.text
 
-    return result+" "
+    return result + " "
 
-#print get_articles_by_date("30/05/2017")
-#print get_article_body("http://economia.elpais.com/economia/2017/06/03/actualidad/1496488261_008848.html")
-print get_article_body("http://cultura.elpais.com/cultura/2017/06/02/actualidad/1496411959_546950.html")
+

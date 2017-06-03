@@ -4,9 +4,6 @@
 from pymongo import errors
 from datetime import datetime
 
-QUERY_GET_WORDS_FROM_DATE=[{"$match":{"date":"?"}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.apariciones"}}},{"$sort":{"count":-1}}]
-QUERY_GET_WORDS_MOST_USED_FROM_DATE=[{'$match':{"date":"?"}},{'$project':{"words":1}},{'$unwind':"$words"},{'$group':{"_id":"$words.word","count":{"$sum":"$words.apariciones"}}},{"$sort":{"count":-1}},{'$limit':5}]
-
     
 class DBUtils(object):
     # protocol = 'mongodb'
@@ -66,7 +63,7 @@ class DBUtils(object):
         if not self._is_date(date):
             raise Exception("Date format is not valid")
 
-        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}},{"$limit":10}])
+        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}}])
 
         for e in iterator:
             result.append(e)

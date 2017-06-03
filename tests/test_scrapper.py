@@ -64,10 +64,10 @@ class ScrapperTestSuite(unittest.TestCase):
     def test_get_article_body_good_response(self):
         """Test get article body good response"""
 
-        responses.add(responses.GET, 'http://deportes.elpais.com/deportes/2017/05/30/actualidad/1496168226_303249.html', body='<div class="articulo-cuerpo" id="cuerpo_noticia" itemprop="articleBody"><p>texto de ejemplo</p></div>', status=200, content_type='text/html')
+        responses.add(responses.GET, 'http://deportes.elpais.com/deportes/2017/05/30/actualidad/1496168226_303249.html', body='<div id="articulo-introduccion"><p>Ejemplo <span>prueba</span></p></div><div class="articulo-cuerpo" id="cuerpo_noticia" itemprop="articleBody"><p>texto de ejemplo</p></div>', status=200, content_type='text/html')
 
         res = scrapper.get_article_body("http://deportes.elpais.com/deportes/2017/05/30/actualidad/1496168226_303249.html")
-        self.assertEqual(res, "texto de ejemplo ", "Articles content do not match")
+        self.assertEqual(res, "texto de ejemplo Ejemplo  prueba ", "Articles content do not match")
 
     @responses.activate
     def test_get_article_body_bad_status_code(self):

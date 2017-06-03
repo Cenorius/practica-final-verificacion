@@ -58,21 +58,6 @@ class StopWordsTestSuite(unittest.TestCase):
         res = textprocessor.remove_stop_words(string)
         self.assertListEqual(res, expected, "Lists do not match")
 
-    def test_uppercase(self):
-        """Test with uppercase letters"""
-        string = ["PATATA", "AMEBA", "TIENEN", "A", "TACATA", "SOMOS", "TENGAN", "MAMASITA"]
-        expected = ["patata", "ameba", "tacata", "mamasita"]
-
-        res = textprocessor.remove_stop_words(string)
-        self.assertListEqual(res, expected, "Lists do not match")
-
-    def test_mixed_uppercase(self):
-        """Test with uppercase letters"""
-        string = ["PatAtA", "AmEbA", "tiENEn", "a", "TaCAtA", "SoMOS", "TeNgAN", "MaMasITA"]
-        expected = ["patata", "ameba", "tacata", "mamasita"]
-
-        res = textprocessor.remove_stop_words(string)
-        self.assertListEqual(res, expected, "Lists do not match")
 
 if __name__ == '__main__':
     unittest.main()

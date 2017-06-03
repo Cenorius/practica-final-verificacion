@@ -85,6 +85,9 @@ class DBUtils(object):
         return result
 
     def exists_article_in_db(self,title,date):
+        if not self._is_date(date):
+            raise Exception("Date format is not valid")
+        
         result=self.collection.find_one({'date':date,'title':title})
         return result is not None
     

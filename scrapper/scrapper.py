@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import requests
 import StringIO
 from lxml import etree
+import xml.etree.ElementTree as ET
 
 def get_articles_by_date(date):
     # result will have a list of dicts with articles title as key and URL as value
@@ -47,33 +48,32 @@ def get_article_body(url):
     if r.status_code != 200:
         raise Exception("something went wrong, status code != 200 OK. Status code: %d" % r.status_code)
     resp = r.text
+
     tree = etree.parse(StringIO.StringIO(resp), parser=parser)
-    body = tree.xpath('//*[@id="cuerpo_noticia"]/p/text()')
+    body = tree.xpath('//*[@id="cuerpo_noticia"]/p')
+
+    for element in body:
+        content+= recursive_get_text(element)
+    
     try:
-        introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/text()')
-        body += introduction
+        introduction = tree.xpath('//*[@id="articulo-introduccion"]/p')
+        for element in introduction:
+            content+= recursive_get_text(element)
     except:
         pass
 
-    try:
-        extra_introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/*')
-        for i in extra_introduction:
-            body.append(i.text)
-    except:
-        pass
-
-    try:
-        extra_body = tree.xpath('//*[@id="cuerpo_noticia"]/p/*')
-        for i in extra_body:
-            body.append(i.text)
-    except:
-        pass
-
-    for i in body:
-        content += i + " "
     return content
 
+def recursive_get_text(element):
+    result=""
+    for i in element.getchildren():
+        result+=recursive_get_text(i)
+    
+    if(element.text):
+        result+=element.text
+
+    return result+" "
 
 #print get_articles_by_date("30/05/2017")
 #print get_article_body("http://economia.elpais.com/economia/2017/06/03/actualidad/1496488261_008848.html")
-print get_article_body("http://economia.elpais.com/economia/2017/05/07/actualidad/1494178491_390667.html")
+print get_article_body("http://cultura.elpais.com/cultura/2017/06/02/actualidad/1496411959_546950.html")

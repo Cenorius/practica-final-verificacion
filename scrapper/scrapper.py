@@ -45,29 +45,34 @@ def get_article_body(url):
     if r.status_code != 200:
         raise Exception("something went wrong, status code != 200 OK. Status code: %d" % r.status_code)
     resp = r.text
+
     tree = etree.parse(StringIO.StringIO(resp), parser=parser)
-    body = tree.xpath('//*[@id="cuerpo_noticia"]/p/text()')
+    body = tree.xpath('//*[@id="cuerpo_noticia"]/p')
+
+    for element in body:
+        content+= recursive_get_text(element)
+
     try:
-        introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/text()')
-        body += introduction
+        introduction = tree.xpath('//*[@id="articulo-introduccion"]/p')
+        for element in introduction:
+            content+= recursive_get_text(element)
     except:
         pass
 
-    try:
-        extra_introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/*')
-        for i in extra_introduction:
-            body.append(i.text)
-    except:
-        pass
-
-    try:
-        extra_body = tree.xpath('//*[@id="cuerpo_noticia"]/p/*')
-        for i in extra_body:
-            body.append(i.text)
-    except:
-        pass
-
-    for i in body:
-        content += i + " "
     return content
+
+def recursive_get_text(element):
+    if not isinstance(element,etree._Element):
+        raise TypeError
+    
+    result=""
+
+    for i in element.getchildren():
+        result+=recursive_get_text(i)
+
+    if(element.text):
+        result += element.text
+
+    return result + " "
+
 

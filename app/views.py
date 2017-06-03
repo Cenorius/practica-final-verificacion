@@ -21,13 +21,12 @@ def parse_text():
 
     if request.method == 'POST':
 
-        db=DBUtils(pymongo.MongoClient(URL_MONGO)[DATA_BASE_NAME].collection)
-
-        date = form.date.raw_data[0]
-        temp=date.split('/')
-        date=temp[1]+"/"+temp[0]+"/"+temp[2]
-
         if form.validate():
+            db=DBUtils(pymongo.MongoClient(URL_MONGO)[DATA_BASE_NAME].collection)
+
+            date = form.date.raw_data[0]
+            temp=date.split('/')
+            date=temp[1]+"/"+temp[0]+"/"+temp[2]
             if request.form['source']=='MostUsed':
                 articles=scrapper.get_articles_by_date(date)
                 for article in articles:

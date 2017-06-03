@@ -22,7 +22,6 @@ class SortbyTimesTestSuite(unittest.TestCase):
         expected = [['is', 1], ['string', 1], ['clean', 1], ['this', 2], ['a', 2]]
 
         res = textprocessor.sort_by_times(string)
-        print res
         self.assertListEqual(res, expected, "Lists do not match")
 
     def test_empty(self):

@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import requests
 import StringIO
 from lxml import etree
-import xml.etree.ElementTree as ET
 
 def get_articles_by_date(date):
     # result will have a list of dicts with articles title as key and URL as value
@@ -65,6 +64,9 @@ def get_article_body(url):
     return content
 
 def recursive_get_text(element):
+    if not isinstance(element,etree._Element):
+        raise TypeError
+    
     result=""
     for i in element.getchildren():
         result+=recursive_get_text(i)

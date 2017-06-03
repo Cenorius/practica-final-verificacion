@@ -68,7 +68,6 @@ def get_article_body(url):
         pass
 
     for i in body:
-        print url +" "+ i
         content += i + " "
     return content
 

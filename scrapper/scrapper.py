@@ -30,8 +30,6 @@ def get_articles_by_date(date):
         titles = map(unicode, tree.xpath('//h2[@class="articulo-titulo"]/a/text()'))
         articles_urls = tree.xpath('//h2[@class="articulo-titulo"]/a/@href')
 
-#        if len(titles) != len(articles_urls):
-#            raise Exception("something went wrong. Found: %d article titles and %d article URLs" % (len(titles), len(articles_urls)))
     except Exception, e:
         raise Exception("body doesn't contain valid HTML")
 
@@ -73,7 +71,3 @@ def get_article_body(url):
         content += i + " "
     return content
 
-
-#print get_articles_by_date("30/05/2017")
-#print get_article_body("http://economia.elpais.com/economia/2017/06/03/actualidad/1496488261_008848.html")
-print get_article_body("http://economia.elpais.com/economia/2017/05/07/actualidad/1494178491_390667.html")

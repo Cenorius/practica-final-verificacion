@@ -49,10 +49,31 @@ def get_article_body(url):
     resp = r.text
     tree = etree.parse(StringIO.StringIO(resp), parser=parser)
     body = tree.xpath('//*[@id="cuerpo_noticia"]/p/text()')
+    try:
+        introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/text()')
+        body += introduction
+    except:
+        pass
+
+    try:
+        extra_introduction = tree.xpath('//*[@id="articulo-introduccion"]/p/*')
+        for i in extra_introduction:
+            body.append(i.text)
+    except:
+        pass
+
+    try:
+        extra_body = tree.xpath('//*[@id="cuerpo_noticia"]/p/*')
+        for i in extra_body:
+            body.append(i.text)
+    except:
+        pass
 
     for i in body:
         content += i + " "
     return content
 
 
-
+#print get_articles_by_date("30/05/2017")
+#print get_article_body("http://economia.elpais.com/economia/2017/06/03/actualidad/1496488261_008848.html")
+print get_article_body("http://economia.elpais.com/economia/2017/05/07/actualidad/1494178491_390667.html")

@@ -16,6 +16,7 @@ def parse_text():
     temp=[]
     articles_r =[]
     words_r=[]
+    message=None
 
     form = TextProcessorForm(request.form)
 
@@ -27,24 +28,24 @@ def parse_text():
             date = form.date.raw_data[0]
             temp=date.split('/')
             date=temp[1]+"/"+temp[0]+"/"+temp[2]
-            
-            if request.form['source']=='MostUsed':
+
+            try:
                 articles=scrapper.get_articles_by_date(date)
-                for article in articles:
-                    if not db.exists_article_in_db(article.get('title'),date):
-                        words=scrapper.get_article_body(article.get('url'))
-                        words=core.process(words)
-                        db.insert_words(date,article.get('title'),words)
+            except:
+                message="Cannot show the articles at that date"
+                return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)
+
+            for article in articles:
+                if not db.exists_article_in_db(article.get('title'),date):
+                    words=scrapper.get_article_body(article.get('url'))
+                    words=core.process(words)
+                    db.insert_words(date,article.get('title'),words)
+            
+            if request.form['source']=='MostUsed': 
                 words_r=db.get_words_from_date(date)
 
             elif request.form['source']=='Articles':
-                articles=scrapper.get_articles_by_date(date)
                 for article in articles:
-                    if not db.exists_article_in_db(article.get('title'),date):
-                        words=scrapper.get_article_body(article.get('url'))
-                        words=core.process(words)
-                        db.insert_words(date,article.get('title'),words)
                     articles_r.append({u"title":article.get("title"), u'words':db.get_words_from_article(date,article.get('title'))})
                     
-                print articles_r[0]
-    return render_template('index.html', form=form, words=words_r, articles=articles_r)
+    return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)

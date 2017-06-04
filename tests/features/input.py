@@ -8,8 +8,6 @@ def fill_input_date(step, date):
     world.browser = webdriver.Chrome()
     world.browser.get("http://localhost:5000")
 
-    #date_without_slashes = date.strip('/')
-
     try:
         datefield = world.browser.find_element_by_id("datepicker")
 

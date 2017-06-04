@@ -29,9 +29,9 @@ def check_list_of_words(step,titles,words):
             words_for_this_article = words_list.find_elements_by_tag_name("li")
 
             supposed_words = words_per_article[i].split(",")
-            for y,word in enumerate(words_for_this_article):
-                if supposed_words[y] != word.text:
-                    raise Exception('Words or count do not match: '+supposed_words[y]+" || "+word.text)
+            for word in words_for_this_article:
+                if word.text not in supposed_words:
+                    raise Exception('Words or count do not match: '+word.text)
 
     except Exception as e:
         world.browser.quit()

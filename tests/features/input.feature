@@ -1,30 +1,26 @@
-Feature: Input validation
+Feature: Date validation
 
-Scenario Outline: Verify normal input
-    Given I fill the input text "<text>"
+Scenario Outline: Verify date parsing
+    Given I fill the input date with "<date>"
+    And Select "<option>"
     When I click the Execute button
-    Then I can see the list of words "<list>" with their number of appearances: "<count>"
-    and The input field is empty
+    Then An error message appears "<error>"
 
 Examples:
-  | text                | list         | count
-  | bob bob y alice     | bob,alice   | 2,1
-  | bob y alice         | bob,alice   | 1,1
-  | bob y alice alice   | alice,bob   | 2,1
-  | AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA | AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA | 1
+  | date        | option    | error
+  | 01/01/3001  | muw       | No articles avaliable for that date
+  | 01/01/3001  | wpa       | No articles avaliable for that date
+  | 32/01/2001  | muw       | Invalid date
+  | 32/01/2001  | wpa       | Invalid date
+  | 01/13/2001  | muw       | Invalid date
+  | 01/13/2001  | wpa       | Invalid date
 
-
-Scenario Outline: Verify input too large
-    Given I fill the input text "<text>"
+Scenario: Verify no input or option
+    Given I fill the input date with "<date>"
     When I click the Execute button
-    Then An error message appears
+    Then An error message appears "<error>"
 
 Examples:
-  | text            |
-  | AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA |
-
-
-Scenario: Verify no input
-    Given I fill the input text ""
-    When I click the Execute button
-    Then Nothing happens
+   | date       | error
+   |            | You need to input a date
+   | 02/02/2012 | You need to select an option

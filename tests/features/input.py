@@ -1,15 +1,20 @@
 from lettuce import *
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
-@step(u'I fill the input text "([^"]*)"')
-def fill_input(step, text):
+@step(u'I fill the input date with "([^"]*)"')
+def fill_input_date(step, date):
     world.browser = webdriver.Chrome()
     world.browser.get("http://localhost:5000")
+
+    #date_without_slashes = date.strip('/')
+
     try:
-        i = world.browser.find_element_by_id("textfield")
-        i.click()
-        i.send_keys(text)
+        datefield = world.browser.find_element_by_id("datepicker")
+
+        world.browser.execute_script("arguments[0].value = '"+date+"';", datefield) 
+
     except AssertionError as e:
         world.browser.quit()
 
@@ -21,6 +26,35 @@ def click_execute(step):
     except AssertionError as e:
         world.browser.quit()
 
+@step(u'Select "([^"]*)"')
+def select_option(step, option):
+    if option == "muw":
+        try:
+            i = world.browser.find_element_by_id("source-0")
+            i.click()
+        except AssertionError as e:
+            world.browser.quit()
+    elif option == "wpa":
+        try:
+            i = world.browser.find_element_by_id("source-1")
+            i.click()
+        except AssertionError as e:
+            world.browser.quit() 
+    else:
+        print option
+        raise Exception('Invalid option to select')
+        world.browser.quit() 
+
+@step(u'An error message appears "([^"]*)"')
+def check_error(step,error):
+    i = world.browser.find_element_by_id("messages-container")
+
+    if error != i.text:
+        raise Exception('Error message not found or incorrect')
+
+    world.browser.quit()
+
+"""
 @step(u'I can see the list of words "([^"]*)" with their number of appearances: "([^"]*)"')
 def check_list_of_words(step, words, appearances):
     # parse words and count to list
@@ -37,23 +71,6 @@ def check_list_of_words(step, words, appearances):
     except AssertionError as e:
         print e
 
-@step(u'An error message appears')
-def check_error_too_large(step):
-    try:
-        i = world.browser.find_element_by_id("message")
-        assert "Max length is 100" == i.text
-    except AssertionError as e:
-        print e
-    world.browser.quit()
-
-@step(u'The input field is empty')
-def check_input_text_dissapeared(step):
-    try:
-        i = world.browser.find_element_by_id("textfield")
-        assert "" == i.text
-    except AssertionError as e:
-        print e
-    world.browser.quit()
 
 @step(u'Nothing happens')
 def check_no_change(step):
@@ -63,3 +80,4 @@ def check_no_change(step):
     except NoSuchElementException as e:
         pass
     world.browser.quit()
+"""

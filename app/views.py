@@ -27,19 +27,15 @@ def parse_text():
 
             date = form.date.raw_data[0]
             temp=date.split('/')
-            print temp, date
             date=temp[1]+"/"+temp[0]+"/"+temp[2]
             try:
                 if (int(temp[2]) > datetime.datetime.today().year):
-                    print "lanza anyo"
                     raise Exception("No future dates allowed")
                 else:
                     if (int(temp[0]) > datetime.datetime.today().month and int(temp[2]) >= datetime.datetime.today().year):
-                        print "lanza mes"
                         raise Exception("No future dates allowed")
                     else:
                         if (int(temp[1]) > datetime.datetime.today().day and int(temp[2]) >= datetime.datetime.today().year and int(temp[0]) >= datetime.datetime.today().month):
-                            print "lanza dia"
                             raise Exception("No future dates allowed")
 
                 db=DBUtils(pymongo.MongoClient(URL_MONGO)[DATA_BASE_NAME].collection)
@@ -61,12 +57,8 @@ def parse_text():
             except Exception,e:
                 message=str(e)
                 return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)
-<<<<<<< Updated upstream
-        
+
         else:
             return render_template('index.html', form=form, message="You need to input a date and select an option")
-    
-=======
 
->>>>>>> Stashed changes
     return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)

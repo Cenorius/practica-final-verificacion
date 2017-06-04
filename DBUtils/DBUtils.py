@@ -6,20 +6,14 @@ from datetime import datetime
 
     
 class DBUtils(object):
-    # protocol = 'mongodb'
-    # ip_address = '127.0.0.1'
-    # port = 27017
-    # mongo_db_name = 'verificacion'
 
     def __init__(self, collection):
         self.collection = collection
 
-    def check_args_type(self, args):#no se usa
-        if isinstance(args, (list, dict)):
-            return True
-        return False
-
-    def query_db(self):#no se usa
+    def query_db(self):
+        """
+        Used only during testing
+        """
         query_results = []
         [query_results.append(i) for i in self.collection.find({}, {'_id': False})]
         return query_results
@@ -101,31 +95,13 @@ class DBUtils(object):
             raise Exception("Database connection failed")
         
         return result is not None
-    
-    def exists_in_db(self, args):#no se usa
-        if self.check_args_type(args):
-            return self.collection.find_one({'text': args})
-        else:
-            raise Exception("Invalid argument")
-
-    def store_in_db(self, args):#no se usa
-        _id = ""
-        if self.check_args_type(args):
-            try:
-                if self.exists_in_db(args):
-                    raise Exception("data already exists in DB")
-                else:
-                    _id = self.collection.insert_one({'text': args}).inserted_id
-                return _id
-            except errors.ConnectionFailure as err:
-                raise Exception(err)
-        else:
-            raise Exception("Invalid argument")
 
     def clean_db(self):
         self.collection.remove({})
 
 if __name__ == "__main__":
+    # Old main:
+    """
     from pymongo import MongoClient
     objects = ["this", "is", "a", "test", "list"]
 
@@ -143,3 +119,4 @@ if __name__ == "__main__":
     print stored
 
     client.clean_db()
+    """

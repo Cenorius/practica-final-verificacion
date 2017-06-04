@@ -33,7 +33,7 @@
                 {% if articles %}
                     {% for article in articles%}
                         <h3>{{article.title}}</h3>
-                        <ul>
+                        <ul class="{{loop.index}}">
                         {% for word in article.words %}
                             <li>
                                 {{word._id}} {{word.count}}
@@ -45,7 +45,7 @@
                
                 {% if words %}
                     <h3>Words most used</h3>
-                    <ul>
+                    <ul class="{{loop.index}}">
                     {% for word in words %}
                     <li>
                         {{word._id}} {{word.count}}

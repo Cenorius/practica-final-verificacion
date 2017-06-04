@@ -25,7 +25,6 @@ def parse_text():
 
         if form.validate():
 
-
             date = form.date.raw_data[0]
             temp=date.split('/')
             date=temp[1]+"/"+temp[0]+"/"+temp[2]
@@ -52,5 +51,8 @@ def parse_text():
             except Exception,e:
                 message=str(e)
                 return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)
-                  
+        
+        else:
+            return render_template('index.html', form=form, message="You need to input a date and select an option")
+    
     return render_template('index.html', form=form, words=words_r, articles=articles_r, message=message)

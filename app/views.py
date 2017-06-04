@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, request
 from app import app
 from .forms import TextProcessorForm
 import pymongo
+import datetime
 
 from textprocessor import core
 from DBUtils import DBUtils
@@ -28,8 +29,10 @@ def parse_text():
             date = form.date.raw_data[0]
             temp=date.split('/')
             date=temp[1]+"/"+temp[0]+"/"+temp[2]
+            try:            
+                if (int(temp[1]) > datetime.datetime.today().day) or (int(temp[0]) > datetime.datetime.today().month) or (int(temp[2]) > datetime.datetime.today().year):
+                    raise Exception("No future dates allowed")
 
-            try:
                 db=DBUtils(pymongo.MongoClient(URL_MONGO)[DATA_BASE_NAME].collection)
                 articles=scrapper.get_articles_by_date(date)
 

@@ -26,10 +26,12 @@ class DBUtils(object):
 
         if not self._is_date(date):
             raise Exception("Date format is not valid")
-        
-        if self.exists_article_in_db(title,date) is False:
-            words=self._format_words(words)
-            result= self.collection.save({"date":date,"title":title,"words":words})
+        try:
+            if self.exists_article_in_db(title,date) is False:
+                words=self._format_words(words)
+                result= self.collection.save({"date":date,"title":title,"words":words})
+        except:
+            raise Exception("Database connection failed")
 
         return result is not None
     
@@ -56,9 +58,11 @@ class DBUtils(object):
 
         if not self._is_date(date):
             raise Exception("Date format is not valid")
-
-        iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}}])
-
+        try:
+            iterator=self.collection.aggregate([{"$match":{"date":date}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$sum":"$words.count"}}},{"$sort":{"count":-1}}])
+        except:
+            raise Exception("Database connection failed")
+        
         for e in iterator:
             result.append(e)
         return result
@@ -72,8 +76,11 @@ class DBUtils(object):
         if not self._is_date(date):
             raise Exception("Date format is not valid")
         
-        iterator=self.collection.aggregate([{"$match":{"date":date, "title":title}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$first":"$words.count"} }},{"$sort":{"count":-1}}])
-
+        try:
+            iterator=self.collection.aggregate([{"$match":{"date":date, "title":title}},{"$project":{"words":1}},{"$unwind":"$words"},{"$group":{"_id":"$words.word","count":{"$first":"$words.count"} }},{"$sort":{"count":-1}}])
+        except:
+            raise Exception("Database connection failed")
+        
         for e in iterator:
             result.append(e)
         return result
@@ -82,7 +89,11 @@ class DBUtils(object):
         if not self._is_date(date):
             raise Exception("Date format is not valid")
         
-        result=self.collection.find_one({'date':date,'title':title})
+        try:
+            result=self.collection.find_one({'date':date,'title':title})
+        except:
+            raise Exception("Database connection failed")
+        
         return result is not None
 
     def clean_db(self):

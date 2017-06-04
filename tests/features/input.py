@@ -51,31 +51,3 @@ def check_error(step,error):
         raise Exception('Error message not found or incorrect')
 
     world.browser.quit()
-
-"""
-@step(u'I can see the list of words "([^"]*)" with their number of appearances: "([^"]*)"')
-def check_list_of_words(step, words, appearances):
-    # parse words and count to list
-    list_words = words.split(",")
-    list_appearances = appearances.split(",")
-
-    try:
-        messages = world.browser.find_element_by_id("messages-container")
-        for i, message in enumerate(messages.find_elements_by_xpath(".//*")):
-            m = message.text.split(":")
-            assert m[0] == list_words[i]
-            assert m[1].strip() == list_appearances[i]
-
-    except AssertionError as e:
-        print e
-
-
-@step(u'Nothing happens')
-def check_no_change(step):
-    try:
-        i = world.browser.find_element_by_id("message")
-        assert "" == i.text
-    except NoSuchElementException as e:
-        pass
-    world.browser.quit()
-"""

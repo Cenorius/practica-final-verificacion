@@ -2,6 +2,7 @@
 
 from .context import textprocessor
 from .context import scrapper
+from lxml import etree
 
 import unittest
 import responses
@@ -67,7 +68,7 @@ class ScrapperTestSuite(unittest.TestCase):
         responses.add(responses.GET, 'http://deportes.elpais.com/deportes/2017/05/30/actualidad/1496168226_303249.html', body='<div id="articulo-introduccion"><p>Ejemplo <span>prueba</span></p></div><div class="articulo-cuerpo" id="cuerpo_noticia" itemprop="articleBody"><p>texto de ejemplo</p></div>', status=200, content_type='text/html')
 
         res = scrapper.get_article_body("http://deportes.elpais.com/deportes/2017/05/30/actualidad/1496168226_303249.html")
-        self.assertEqual(res, "texto de ejemplo Ejemplo  prueba ", "Articles content do not match")
+        self.assertEqual(res, "texto de ejemplo prueba Ejemplo  ", "Articles content do not match "+res)
 
     @responses.activate
     def test_get_article_body_bad_status_code(self):
@@ -92,6 +93,38 @@ class ScrapperTestSuite(unittest.TestCase):
 
         self.assertEqual("", res, "Unexpected return found")
 
+    def test_recursive_get_text_without_children(self):
+        root=etree.Element("root")
+        root.text="viva cabify"
+
+        expected="viva cabify "
+
+        res=scrapper.recursive_get_text(root)
+        self.assertEqual(res,expected, type(root))
+
+    def test_recursive_get_text_with_children(self):
+        root=etree.Element("root")
+        root.text="viva cabify"
+
+        child=etree.SubElement(root,"child")
+        child.text="por supuesto"
+
+        child=etree.SubElement(root,"child2")
+        child.text="por supuesto2"
+
+        child=etree.SubElement(child,"child3")
+        child.text="por supuesto3"
+
+        expected="por supuesto por supuesto3 por supuesto2 viva cabify "
+
+        res=scrapper.recursive_get_text(root)
+        self.assertEqual(res,expected, type(root))
+
+    def test_recursive_get_text_TypeError(self):
+        root=1
+
+        with self.assertRaises(TypeError):
+            scrapper.recursive_get_text(root)
 
 
 if __name__ == '__main__':

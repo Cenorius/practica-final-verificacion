@@ -25,7 +25,13 @@ def check_list_of_words(step,titles,words):
                 raise Exception('Titles do not match')
             
             # Check each word
-            # TODO
+            words_list = world.browser.find_element_by_xpath("//ul[@class='"+str(i+1)+"']")
+            words_for_this_article = words_list.find_elements_by_tag_name("li")
+
+            supposed_words = words_per_article[i].split(",")
+            for y,word in enumerate(words_for_this_article):
+                if supposed_words[y] != word.text:
+                    raise Exception('Words or count do not match')
 
     except Exception as e:
         world.browser.quit()

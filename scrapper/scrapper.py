@@ -14,11 +14,11 @@ def get_articles_by_date(date):
     # All dates URL will start with this pattern
     URL = "http://elpais.com/tag/fecha/"
     # the date comes with the following formar dd/mm/yyyy
-    try:
-        d = date.split("/")
-        URL += d[2] + d[1] + d[0]
-    except Exception, e:
+    d = date.split("/")
+    if len(d) != 3:
         raise Exception("invalid date format")
+    URL += d[2] + d[1] + d[0]
+        
 
     r = requests.get(URL)
     if r.status_code != 200:

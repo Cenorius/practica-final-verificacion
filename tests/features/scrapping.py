@@ -31,7 +31,7 @@ def check_list_of_words(step,titles,words):
             supposed_words = words_per_article[i].split(",")
             for y,word in enumerate(words_for_this_article):
                 if supposed_words[y] != word.text:
-                    raise Exception('Words or count do not match')
+                    raise Exception('Words or count do not match: '+supposed_words[y]+" || "+word.text)
 
     except Exception as e:
         world.browser.quit()

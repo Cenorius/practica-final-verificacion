@@ -40,8 +40,8 @@ def select_option(step, option):
             world.browser.quit() 
     else:
         print option
-        raise Exception('Invalid option to select')
         world.browser.quit() 
+        raise Exception('Invalid option to select')
 
 @step(u'An error message appears "([^"]*)"')
 def check_error(step,error):

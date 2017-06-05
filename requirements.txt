@@ -34,3 +34,4 @@ WTForms==2.1
 requests==2.17.3
 lxml==3.7.3
 responses==0.5.1
+gunicorn==19.7.1

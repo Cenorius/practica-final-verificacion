@@ -1,6 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            $( function() {
+                $( "#datepicker" ).datepicker();
+            } );
+        </script>
         <meta charset="utf-8">
         <title>Textprocessor</title>
     </head>
@@ -8,40 +17,47 @@
         <form action="" method="post">
             {{ form.csrf }}
 
-            Write your text here:<br>
+            Pick a date:
+            <br>
             <div>
-                {{ form.name(type="textarea", id="textfield") }}
+                {{ form.date(type="text", id="datepicker", readonly=true) }}{{ form.source }}
             </div>
-            
             <div class="input submit">
                 <button id="execute" type="submit" value="Submit">Execute</button>
             </div>
         </form>
-        <button value="Reset" id="clear" onclick="clear();">Reset</button>
-        <br>
-        <br>
         <br>
         <div id="results-container">
             <div id="messages-container">
-                <ul>
-                {% if response %}
-                    {% for key, value in response.iteritems() %}
-                    <li>{{ key }}: {{ value }}</li>
+                
+                {% if articles %}
+                    {% for article in articles%}
+                        <h3>{{article.title}}</h3>
+                        <ul class="{{loop.index}}">
+                        {% for word in article.words %}
+                            <li>
+                                {{word._id}} {{word.count}}
+                            </li>
+                        {% endfor %}
+                         </ul>
                     {% endfor %}
                 {% endif %}
-                </ul>
+               
+                {% if words %}
+                    <h3>Words most used</h3>
+                    <ul class="1">
+                    {% for word in words %}
+                    <li>
+                        {{word._id}} {{word.count}}
+                    </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
                 {% if message %}
-                <p id="message">{{ message }}</p>
+                    {{message}}
                 {% endif %}
             </div>
         </div>
-    <script type="text/javascript">
-            document.getElementById("clear").onclick = function () {
-                document.getElementById("textfield").value = "";
-             };
-             document.body.onload = function() {
-                document.getElementById("textfield").value = "";
-             };
-     </script>
     </body>
 </html>

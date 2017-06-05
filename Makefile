@@ -9,4 +9,4 @@ coverage:
 	coverage report -m
 
 clean:
-	rm -rf */*.pyc
+	find . -type f -name '*.pyc' -delete
